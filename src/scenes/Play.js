@@ -25,6 +25,7 @@ class Play extends Phaser.Scene {
         //this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
         // add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'torpedo').setOrigin(0.5, 0);
+        this.p2Rocket = new Torpedo(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'torpedo').setOrigin(0.5, 0);
         // add spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize * 6, borderUISize*4, 'submarine', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize * 3, borderUISize * 5 + borderPadding * 2, 'submarine', 0, 20).setOrigin(0, 0);
@@ -34,6 +35,10 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyV = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
+        //keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         // animation config
         this.anims.create({
             key: 'explode',
@@ -42,6 +47,7 @@ class Play extends Phaser.Scene {
         });
         // initialize score
         this.p1Score = 0;
+        this.p2Score = 0;
         // display score
         let scoreConfig = {
             fontFamily: 'Courier',
@@ -56,6 +62,7 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreRight = this.add.text(borderUISize * borderPadding+ 155, borderUISize + borderPadding*2, this.p2Score, scoreConfig);
         // GAME OVER flag
         this.gameOver = false;
         // 60-second play clock
@@ -77,6 +84,7 @@ class Play extends Phaser.Scene {
         this.starfield.tilePositionX -= 4;
         if (!this.gameOver) {
             this.p1Rocket.update();
+            this.p2Rocket.update();
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
@@ -93,6 +101,18 @@ class Play extends Phaser.Scene {
         if(this.checkCollision(this.p1Rocket, this.ship01)){
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+        }
+        if(this.checkCollision(this.p2Rocket, this.ship03)){
+            this.p2Rocket.reset();
+            this.shipExplode2(this.ship03);
+        }
+        if(this.checkCollision(this.p2Rocket, this.ship02)){
+            this.p2Rocket.reset();
+            this.shipExplode2(this.ship02);
+        }
+        if(this.checkCollision(this.p2Rocket, this.ship01)){
+            this.p2Rocket.reset();
+            this.shipExplode2(this.ship01);
         }
     }
     checkCollision(rocket, ship) {
@@ -122,6 +142,27 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
+        this.sound.play('sfx_explosion');
+    }
+    shipExplode2(ship) {
+        // temporarily hide ship
+        ship.alpha = 0;
+        // create explosion sprite at ship's position
+        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+        // play explode animation
+        boom.anims.play('explode');
+        // callack after anim completes
+        boom.on('animationcomplete', () => {
+            // reset ship position
+            ship.reset();
+            // make ship visible again
+            ship.alpha = 1;
+            // remove explosion sprite
+            boom.destroy();
+        });
+        // score add and repaint
+        this.p2Score += ship.points;
+        this.scoreRight.text = this.p2Score;
         this.sound.play('sfx_explosion');
     }
 }

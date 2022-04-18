@@ -4,9 +4,12 @@ class Menu extends Phaser.Scene {
     }
     preload() {
         // load audio
-        this.load.audio('sfx_select', './assets/assets_blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/assets_explosion38.wav');
-        this.load.audio('sfx_rocket', './assets/assets_rocket_shot.wav');
+        //this.load.audio('sfx_select', './assets/assets_blip_select12.wav');
+        this.load.audio('sfx_select', './assets/bubble.wav');
+        //this.load.audio('sfx_explosion', './assets/assets_explosion38.wav');
+        this.load.audio('sfx_explosion', './assets/sub_explosion.wav');
+        //this.load.audio('sfx_rocket', './assets/assets_rocket_shot.wav');
+        this.load.audio('sfx_rocket', './assets/torpedo_whoosh.wav');
         this.load.image('blue_background', './assets/blue_background.jpg');
         this.load.image('submarine_patrol_title', './assets/submarine_patrol_title.png');
     }
