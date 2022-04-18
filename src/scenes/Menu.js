@@ -6,6 +6,7 @@ class Menu extends Phaser.Scene {
         // load audio
         //this.load.audio('sfx_select', './assets/assets_blip_select12.wav');
         this.load.audio('sfx_select', './assets/bubble.wav');
+        this.load.image('sand', './assets/sand.jpg');
         //this.load.audio('sfx_explosion', './assets/assets_explosion38.wav');
         this.load.audio('sfx_explosion', './assets/sub_explosion.wav');
         //this.load.audio('sfx_rocket', './assets/assets_rocket_shot.wav');
@@ -29,13 +30,19 @@ class Menu extends Phaser.Scene {
         }
         //background
         this.background = this.add.tileSprite(0, 500, 1280, 1280, 'blue_background');
+        //submarine border
+        this.add.tileSprite(0, 0, game.config.width, borderUISize, 'sand').setOrigin(0, 0);
+        this.add.tileSprite(0, game.config.height - borderUISize, game.config.width, borderUISize, 'sand').setOrigin(0,0);
+        this.add.tileSprite(0, 0, borderUISize, game.config.height, 'sand').setOrigin(0, 0);
+        this.add.tileSprite(game.config.width - borderUISize, 0, borderUISize, game.config.height, 'sand').setOrigin(0, 0);
         // show menu text
-        this.logo = this.add.sprite(325,160,"submarine_patrol_title");
+        this.logo = this.add.sprite(318,160,"submarine_patrol_title");
         //this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', {fontFamily: 'ssrfont'}, menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use <--> arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'P1: Use <--> to move & (^) to fire', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'P2: Use A--D to move & (W) to fire', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#A9A9A9';
         menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press <- for Novice or -> for Expert', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + borderUISize*2 + borderPadding*2, 'Press <- for Novice, -> for Expert', menuConfig).setOrigin(0.5);
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
